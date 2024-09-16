@@ -1,0 +1,79 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Project specific
+data/raw/*
+data/processed/*
+data/external/*
+models/proprietary/*
+logs/*
+mlruns/*
+
+# Secrets
+.env
+*.pem
+*.key
+
+# Docker
+.docker
+
+# Database
+*.db
+*.sqlite3
+
+# LangChain (if you're using local storage for embeddings or other data)
+.langchain
+
+# Temporary files
+*.log
+*.tmp
+
+# Large files (adjust as needed)
+*.hdf5
+*.h5
+*.pkl
+*.model
+
+# Keep .gitkeep files
+!/**/.gitkeep
