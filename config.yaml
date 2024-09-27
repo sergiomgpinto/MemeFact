@@ -1,0 +1,27 @@
+politifact_dataset:
+  # add info
+memes_dataset:
+  # add info
+meme_images_dir:
+  # add info
+moderation:
+  # add info
+ablation:
+  combinations:
+    "C+V+R": ['claim','verdict','rationale']
+    "C+V+IYTIS": ['claim','verdict','iytis']
+    "C+V+R+IYTIS": ['claim','verdict','rationale','iytis']
+    "MI+C+V+R": ['meme_image','claim','verdict','rationale']
+    "default": ['meme_image','claim','verdict','iytis']
+    "MI+C+V+R+IYTIS": ['meme_image','claim','verdict','rationale','iytis']
+baseline:
+  num_memes: 1
+rag:
+  # add info
+debate:
+  # add info
+rlhf:
+  # add info
+models:
+    gpt-4o:
+      pass

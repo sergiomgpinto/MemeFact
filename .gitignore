@@ -46,9 +46,10 @@ Thumbs.db
 data/raw/*
 data/processed/*
 data/external/*
-models/proprietary/*
+src/models/proprietary/*
 logs/*
 mlruns/*
+output/*
 
 # Secrets
 .env

@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "memefact"
+version = "0.1.0"
+description = "AI system generating memes as alternative explanations to traditional fact-checking text-based explanations"
+authors = ["Sérgio Pinto <sergio.g.pinto@tecnico.ulisboa.pt>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+transformers = "^4.45.1"
+openai = "^1.50.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
