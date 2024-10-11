@@ -1,0 +1,26 @@
+variant: 'baseline'
+moderate: False
+ablation: 'default'
+starting_date: 'October 10, 2024'
+num_memes: 7
+post_text_template:
+  factual:
+    ai: |
+      Fact-Check Context:
+        1. This AI-generated meme fact-checks the original post's claim
+        2. The claim appears to be: {verdict}
+        3. Full fact-check source: {url}
+    no_ai: |
+      Fact-Check Context:
+        1. This meme fact-checks the original post's claim
+        2. The claim appears to be: {verdict}
+        3. Full fact-check source: {url}
+  humorous:
+    ai: |
+      Plot twist! The post the AI-generated meme is replying to? It's been fact-checked! 
+      Spoiler alert: The verdict appears to be {verdict}. Don't just take our meme's word for it, though. 
+      For the full scoop, check out: {url}.
+    no_ai: |
+      Plot twist! The post the meme is replying to? It's been fact-checked! 
+      Spoiler alert: The verdict appears to be {verdict}. Don't just take our meme's word for it, though. 
+      For the full scoop, check out: {url}.

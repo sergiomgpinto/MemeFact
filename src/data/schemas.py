@@ -1,3 +1,5 @@
+from dataclasses import field
+
 from pydantic import BaseModel, HttpUrl
 from typing import Optional, List
 from utils.validators import validate_url
@@ -20,9 +22,6 @@ class FactCheckingArticle(BaseModel):
 
     def get_rationale(self) -> str:
         return self.rationale
-
-    def get_source(self) -> str:
-        return self.source
 
     def get_date(self) -> str:
         return self.date
@@ -78,6 +77,9 @@ class MemeImage(BaseModel):
                 raise ValueError(f"Invalid URL for FactCheckingArticle: {result.message}")
         return self
 
+    def to_dict(self) -> dict:
+        return {k: v for k, v in self.__dict__.items() if v is not None}
+
 
 class Meme(BaseModel):
     meme_image: MemeImage
@@ -106,16 +108,16 @@ class Meme(BaseModel):
 
 class InputData(BaseModel):
     article: FactCheckingArticle = None
-    meme_image: Optional[MemeImage] = None
+    meme_images: Optional[List[MemeImage]] = field(default_factory=list)
 
     def get_article(self):
         return self.article
 
-    def get_meme_image(self):
-        return self.meme_image
+    def get_meme_images(self):
+        return self.meme_images
 
     def set_article(self, article):
         self.article = article
 
-    def set_meme_image(self, meme_image):
-        self.meme_image = meme_image
+    def append_meme_image(self, meme_image):
+        self.meme_images.append(meme_image)

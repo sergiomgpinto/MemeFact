@@ -14,7 +14,7 @@ class SelectionModule:
     def rag(self):
         input_data = self.input_module.get_input()
         article = input_data.get_article()
-        meme_image = input_data.get_meme_image()
+        meme_image = input_data.get_meme_images()
 
         if not meme_image:
             pass

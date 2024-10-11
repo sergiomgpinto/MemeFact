@@ -1,6 +1,5 @@
 import logging
 from typing import List
-from data.schemas import Meme
 from utils.img_flip_api import ImgFlipAPI
 from dotenv import load_dotenv
 from data.schemas import Meme
@@ -35,8 +34,9 @@ class ConcatenationModule:
                 if response.get_is_success():
                     data = response.get_data()
                     meme.set_url(data['url'])
+                    print(f'Meme upload url: {data['url']}')
                 else:
-                    print(f'Failed creating meme {meme_image.get_id()} with error: {response.get_error_message()}')
+                    print(f'Failed creating meme {meme_image.get_id()} with error: {response.get_message()}')
                     continue
 
         return updated_memes

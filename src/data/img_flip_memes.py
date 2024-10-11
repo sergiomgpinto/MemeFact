@@ -1,20 +1,24 @@
 import pandas as pd
 import os
 import glob
+from pathlib import Path
 from utils.img_flip_api import ImgFlipAPI
 from utils.helpers import download_image
-from data.make_dataset import data_to_csv
+from data.csv import data_to_csv
 
 
 class MemesDataManager:
 
-    def __init__(self, csv_path: str = '../../data/raw'):
+    def __init__(self):
         self.img_flip_api = ImgFlipAPI()
-        self.csv_directory = csv_path
         self.memes_data = self._load_memes_data()
 
+    def get_random_meme_image_url(self, num_memes):
+        sampled_memes = self.memes_data.sample(n=num_memes)
+        return sampled_memes['url'].tolist()
+
     def _load_memes_data(self):
-        pattern = os.path.join(self.csv_directory, "meme_images_*.csv")
+        pattern = os.path.join(Path.cwd() / '..' / '..' / 'data' / 'raw', "meme_images_*.csv")
         csv_files = glob.glob(pattern)
         if not csv_files:
             self.fetch_and_store_meme_data()

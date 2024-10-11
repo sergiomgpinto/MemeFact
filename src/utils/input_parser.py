@@ -24,16 +24,15 @@ class ParserError(Exception):
 class InputParser:
 
     def __init__(self, args: Any):
-
         self.article_source = args['politifact']
-        self.meme_image_source = args['meme_image'] if args['meme_image'] else None
+        self.meme_image_sources = args['meme_images']
         self.meme_data_manager = MemesDataManager()
-        self.variant = args['variant'] if args['variant'] else None
+        self.variant = args['variant']
 
     def parse(self):
         input_data = InputData()
 
-        if self.variant == "baseline" and not self.meme_image_source:
+        if self.variant == "baseline" and not self.meme_image_sources:
             raise ParserError("Baseline variant requires a meme image")
 
         if not isinstance(self.article_source, str):
@@ -63,32 +62,27 @@ class InputParser:
         else:
             raise ParserError("Invalid article source.")
 
-        if not self.meme_image_source:  # When no meme image is provided
-            return input_data
-
-        if not isinstance(self.meme_image_source, str) and not self.meme_image_source.isdigit():
-            raise ParserError("Invalid meme image source. Must be an ImgFlip ID, ImgFlip name or ImgFlip URL."
-                              " Check https://imgflip.com/memetemplates for options")
-
-        if self.meme_image_source.isdigit():
-            # Meme image source is an ImgFlip meme image id.
-            self.meme_image_source = int(self.meme_image_source)
-            meme_image = self.meme_image_id_to_meme_image()
-            input_data.set_meme_image(meme_image)
-        elif isinstance(self.meme_image_source, str):
-            if self.meme_image_source.startswith('https://'):
-                # Meme image source is an ImgFlip url.
-                meme_image = self.url_to_meme_image()
-                input_data.set_meme_image(meme_image)
-            else:
-                # Meme image source is an ImgFlip meme image name.
-                meme_image = self.meme_image_name_to_meme_image()
-                input_data.set_meme_image(meme_image)
-        else:
-            raise ParserError("Invalid meme image source.")
+        if self.meme_image_sources:
+            for source in self.meme_image_sources:
+                meme_image = self.parse_single_meme_source(source)
+                input_data.append_meme_image(meme_image)
 
         logger.info("Arguments parsed successfully")
         return input_data
+
+    def parse_single_meme_source(self, source):
+        if isinstance(source, int) or (isinstance(source, str) and source.isdigit()):
+            # Meme image source is an ImgFlip meme image id.
+            return self.meme_image_id_to_meme_image(int(source))
+        elif isinstance(source, str):
+            if source.startswith('https://'):
+                # Meme image source is an ImgFlip url.
+                return self.url_to_meme_image(source)
+            else:
+                # Meme image source is an ImgFlip meme image name.
+                return self.meme_image_name_to_meme_image(source)
+        else:
+            raise ParserError(f"Invalid meme image source: {source}")
 
     def csv_to_article(self, row_index):
         df = pd.read_csv(self.article_source)
@@ -105,7 +99,7 @@ class InputParser:
                                    date=article_data['date'])
 
     def url_to_article(self):
-        article_dict = politifact_specific_article_scraper(self.article_source)
+        article_dict = politifact_specific_article_scraper(self.article_source, True)[0]
         if not article_dict:
             raise ParserError(f'Could not scrape article from URL: {self.article_source}')
         return FactCheckingArticle(claim=article_dict['claim'],
@@ -116,39 +110,20 @@ class InputParser:
                                    source=article_dict['source'],
                                    date=article_dict['date'])
 
-    def meme_image_id_to_meme_image(self):
-        meme_info = self.meme_data_manager.get_meme_by_id(self.meme_image_source)
-
+    def meme_image_id_to_meme_image(self, meme_id):
+        meme_info = self.meme_data_manager.get_meme_by_id(meme_id)
         meme_info = meme_info.iloc[0].to_dict()
 
-        return MemeImage(id=meme_info['id'],
-                         url=meme_info['url'],
-                         name=meme_info['name'],
-                         width=meme_info['width'],
-                         height=meme_info['height'],
-                         box_count=meme_info['box_count'],
-                         times_used=meme_info['times_used'])
+        return MemeImage(**meme_info)
 
-    def url_to_meme_image(self):
-        meme_info = self.meme_data_manager.get_meme_by_url(self.meme_image_source)
+    def url_to_meme_image(self, url):
+        meme_info = self.meme_data_manager.get_meme_by_url(url)
         meme_info = meme_info.iloc[0].to_dict()
 
-        return MemeImage(id=meme_info['id'],
-                         url=meme_info['url'],
-                         name=meme_info['name'],
-                         width=meme_info['width'],
-                         height=meme_info['height'],
-                         box_count=meme_info['box_count'],
-                         times_used=meme_info['times_used'])
+        return MemeImage(**meme_info)
 
-    def meme_image_name_to_meme_image(self):
-        meme_info = self.meme_data_manager.get_meme_by_name(self.meme_image_source)
+    def meme_image_name_to_meme_image(self, name):
+        meme_info = self.meme_data_manager.get_meme_by_name(name)
         meme_info = meme_info.iloc[0].to_dict()
 
-        return MemeImage(id=meme_info['id'],
-                         url=meme_info['url'],
-                         name=meme_info['name'],
-                         width=meme_info['width'],
-                         height=meme_info['height'],
-                         box_count=meme_info['box_count'],
-                         times_used=meme_info['times_used'])
+        return MemeImage(**meme_info)

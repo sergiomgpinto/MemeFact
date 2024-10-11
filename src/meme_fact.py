@@ -13,27 +13,28 @@ class MemeFact(ABC):
 
     def __init__(self, config):
         self.config = config
+        self.class_name = f'{self.__class__.__name__.split('Variant')[0]}'.lower()
         self.filtered_memes = None
 
-    def run(self, args):
+    def run(self, args) -> List[Meme]:
         parser = InputParser(args)
         input_data = parser.parse()
         input_module = InputModule(input_data=input_data,
                                    ablation_mode=args['ablation'],
                                    ablation_dict=self.config['ablation'])
-
         print(f'Running {self.__class__.__name__}.')
 
         self.filtered_memes = self._run_impl(input_module, **args)
-        self._output_memes()
+        self._output_memes(args['bot'])
+        return self.filtered_memes
 
-    def _output_memes(self):
-        download_memes(self.filtered_memes)
+    def _output_memes(self, bot_run: bool):
+        download_memes(self.filtered_memes, bot_run)
 
     def _run_moderation_pipeline(self, generation_module: GenerationModule, num_memes: int,
-                                 enable_moderation: bool) -> List[Meme]:
+                                 enable_moderation: bool, model: str, prompt_type: str) -> List[Meme]:
         moderation_pipeline = MemeModerationPipeline(generation_module=generation_module, enable_moderation=enable_moderation)
-        return moderation_pipeline.run(num_memes=num_memes)
+        return moderation_pipeline.run(num_memes=num_memes, model=model, prompt_type=prompt_type)
 
     @abstractmethod
     def _run_impl(self, input_module: InputModule, **kwargs) -> List[Meme]:
@@ -52,9 +53,9 @@ class MemeModerationPipeline:
                 return False
         return True
 
-    def run(self, num_memes: int) -> List[Meme]:
+    def run(self, num_memes: int, model: str, prompt_type: str) -> List[Meme]:
         while True:
-            non_captioned_memes = self.generation_module.generate_captions(num_memes)
+            non_captioned_memes = self.generation_module.generate_captions(num_memes, model, prompt_type)
             meme_candidates = self.concatenation_module.generate_memes(non_captioned_memes)
             filtered_memes = self.moderation_module.moderate_memes(meme_candidates)
 

@@ -39,33 +39,8 @@ class ImgFlipAPI:
         except requests.RequestException as e:
             return HttpResponse.failure(message=f"Error fetching meme templates: {str(e)}")
 
-    '''
-    [
-   {
-      "text": "One does not simply",
-      "x": 10,
-      "y": 10,
-      "width": 548,
-      "height": 100,
-      "color": "#ffffff",
-      "outline_color": "#000000"
-   },
-   {
-      "text": "Make custom memes on the web via imgflip API",
-      "x": 10,
-      "y": 225,
-      "width": 548,
-      "height": 100,
-      "color": "#ffffff",
-      "outline_color": "#000000"
-   }
-    ]
-    '''
-
     def caption_meme_image(self,
                            meme_image_id: int,
-                           font: Optional[str] = "impact",
-                           max_font_size: Optional[int] = 50,
                            captions: Optional[List[str]] = None,
                            no_watermark: bool = False) -> HttpResponse:
         url = f"{self.BASE_URL}/caption_image"
@@ -74,19 +49,13 @@ class ImgFlipAPI:
             'template_id': meme_image_id,
             'username': self.username,
             'password': self.password,
-            'font': font,
-            'max_font_size': max_font_size
         }
         if len(captions) <= 2:
             data['text0'] = captions[0]
             data['text1'] = captions[1]
         else:
-            data['boxes'] = []
-            for caption in captions:
-                data['boxes'].append({
-                    'text': caption,
-                })
-
+            for i in range(len(captions)):
+                data[f'boxes[{i}][text]'] = captions[i]
         if no_watermark:
             data['no_watermark'] = True
 
@@ -157,8 +126,3 @@ class ImgFlipAPI:
                 message=f"An exception occured while getting the meme: {str(e)}",
                 status_code=500
             )
-
-
-if __name__ == '__main__':
-    api = ImgFlipAPI()
-    response = api.get_top100_used_meme_images()

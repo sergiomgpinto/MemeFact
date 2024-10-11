@@ -46,7 +46,6 @@ Thumbs.db
 data/raw/*
 data/processed/*
 data/external/*
-src/models/proprietary/*
 logs/*
 mlruns/*
 output/*
@@ -62,9 +61,6 @@ output/*
 # Database
 *.db
 *.sqlite3
-
-# LangChain (if you're using local storage for embeddings or other data)
-.langchain
 
 # Temporary files
 *.log
