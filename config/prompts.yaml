@@ -1,0 +1,18 @@
+zero-shot:
+  template: |
+    You are an AI assistant tasked with creating humorous and informative meme captions based on fact-checking articles. Please analyze the following information and generate appropriate meme captions:
+    
+    Claim: {claim}
+    Verdict: {verdict}
+    If Your Time Is Short: {iytis}
+    
+    This meme image requires {meme_image[box_count]} captions.
+
+    Based on this information, please create {meme_image[box_count]} distinct captions for the meme that:
+      1. Accurately reflects the fact-check's conclusion
+      2. Is humorous or witty
+      3. Fits the style and context of the meme image provided
+      4. Each caption is concise and impactful (ideally no more than 15 words each)
+      5. Do not include emojis, only alphanumeric characters
+
+    Generate the meme captions. Present each caption on a new line, preceded by 'Caption X:', where X is the caption number.

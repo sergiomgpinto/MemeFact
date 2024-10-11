@@ -16,7 +16,7 @@ def run_baseline(args):
 
 
 def run_ablation(args):
-    experiment_params = {'ablation': ["C+V+R", "C+V+IYTIS", "C+V+R+IYTIS", "MI+C+V+R", "default", "MI+C+V+R+IYTIS"]}
+    experiment_params = {'ablation': ["c+v+r", "c+v+iytis", "c+v+r+iytis", "mi+c+v+r", "default", "mi+c+v+r+iytis"]}
 
     combinations = _generate_experiment_combinations(experiment_params)
 

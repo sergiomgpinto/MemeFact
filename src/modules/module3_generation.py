@@ -1,9 +1,9 @@
 import logging
 from typing import List
+from models.model_manager import ModelManager
 from modules.module1_input import AblationInput
 from data.schemas import Meme
 from modules.module2_selection import SelectionModule
-from models.model_wrapper import ModelWrapper
 from abc import ABC, abstractmethod
 
 logging.basicConfig(level=logging.INFO)
@@ -14,9 +14,10 @@ class GenerationModule(ABC):
 
     def __init__(self, ablation_input: AblationInput):
         self.input = ablation_input
+        self.model_manager = ModelManager()
 
     @abstractmethod
-    def generate_captions(self, num_memes: int) -> List[Meme]:
+    def generate_captions(self, num_memes: int, model: str, prompt_type: str) -> List[Meme]:
         pass
 
 
@@ -25,26 +26,19 @@ class BaselineGenerationModule(GenerationModule):
         super().__init__(ablation_input)
         logger.info("BaselineGenerationModule initialized")
 
-    def generate_captions(self, num_memes: int) -> List[Meme]:
-        lc = ModelWrapper()
-        model = lc.get_gpt4o()
-
+    def generate_captions(self, num_memes: int, model: str, prompt_type: str) -> List[Meme]:
         memes = []
-        claim = self.input.get_claim()
-        verdict = self.input.get_verdict()
-        iytis = self.input.get_iytis(),
-        meme_image = self.input.get_meme_image()
-        meme_image_url = meme_image.get_url()
-        meme_image_box_count = meme_image.get_box_count()
+        meme_images = self.input.get_meme_images()
+        prompt_params = self.input.to_dict()
+        for index, meme_image in enumerate(meme_images):
+            current_params = prompt_params.copy()
+            current_params['meme_image'] = current_params['meme_images'][index]
+            del current_params['meme_images']
+            meme_captions = self.model_manager.inference_model(model, prompt_type, current_params)
 
-        for _ in range(num_memes):
-            meme_captions = lc.send_message(model=model,
-                                            claim=claim,
-                                            verdict=verdict,
-                                            iytis=iytis,
-                                            meme_image_url=meme_image_url,
-                                            box_count=meme_image_box_count)
-
+            if not meme_captions:
+                print(f'Failed attempt to generate captions for {meme_image}.')
+                continue
             meme = Meme(meme_image=meme_image,
                         captions=meme_captions)
             memes.append(meme)
