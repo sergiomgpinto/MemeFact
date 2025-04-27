@@ -70,7 +70,9 @@ class InputParser:
             raise ParserError("Invalid article source.")
 
         if self.meme_image_sources:
+            print("entrei")
             for source in self.meme_image_sources:
+                print("entrei2")
                 meme_image = self.parse_single_meme_source(source)
                 input_data.append_meme_image(meme_image)
 
@@ -79,15 +81,14 @@ class InputParser:
 
     def parse_single_meme_source(self, source):
         if isinstance(source, int) or (isinstance(source, str) and source.isdigit()):
-            # Meme image source is an ImgFlip meme image id.
             return self.meme_image_id_to_meme_image(int(source))
-        elif isinstance(source, str):
-            if source.startswith('https://'):
-                # Meme image source is an ImgFlip url.
-                return self.url_to_meme_image(source)
-            else:
-                # Meme image source is an ImgFlip meme image name.
-                return self.meme_image_name_to_meme_image(source)
+        # elif isinstance(source, str):
+        #     if source.startswith('https://'):
+        #         # Meme image source is an ImgFlip url.
+        #         return self.url_to_meme_image(source)
+        #     else:
+        #         # Meme image source is an ImgFlip meme image name.
+        #         return self.meme_image_name_to_meme_image(source)
         else:
             raise ParserError(f"Invalid meme image source: {source}")
 
@@ -110,16 +111,4 @@ class InputParser:
 
     def meme_image_id_to_meme_image(self, meme_id):
         meme_info = self.meme_data_manager.get_meme_by_id(meme_id)
-        #meme_info = meme_info.iloc[0].to_dict()
-        #return MemeImage(**{k: v for k, v in meme_info.items() if k in ['id', 'name', 'url']})
         return meme_info
-
-    # def url_to_meme_image(self, url):
-    #     meme_info = self.meme_data_manager.get_meme_by_url(url)
-    #     meme_info = meme_info.iloc[0].to_dict()
-    #     return MemeImage(**{k: v for k, v in meme_info.items() if k in ['id', 'name', 'url']})
-
-    # def meme_image_name_to_meme_image(self, name):
-    #     meme_info = self.meme_data_manager.get_meme_by_name(name)
-    #     meme_info = meme_info.iloc[0].to_dict()
-    #     return MemeImage(**{k: v for k, v in meme_info.items() if k in ['id', 'name', 'url']})

@@ -141,7 +141,6 @@ class Prompt(ABC):
         self.text, self.image = self._parse_prompt(config, params, model, step)
 
     def get_text(self):
-        print(self.text)
         return self.text
 
     def get_image(self):
