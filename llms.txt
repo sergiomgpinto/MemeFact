@@ -1,0 +1,72 @@
+# MemeFact: Fact-Checking News with Internet Memes
+
+> MemeFact is a Retrieval Augmented Generation system for creating fact-checking memes that explain verdict rationales in an engaging visual format. This research project demonstrated that meme-based explanations significantly reduced backfire effects (39.60% vs. 58.18%) and resulted in more effective belief correction (49.50% vs. 31.82%) compared to traditional text-based fact-checking. The system uses Large Language Models with the best results achieved using Claude-3.5-Sonnet at temperature=1.0 with the RAG variant.
+
+## Repository Purpose and Structure
+
+This repository contains the complete implementation of the MemeFact system developed as part of a Master's thesis at Instituto Superior Técnico, Universidade de Lisboa. The system generates memes that explain fact-checking verdicts from reputable fact-checking organizations.
+
+The repository is structured as follows:
+- `src/`: Core implementation of the MemeFact system
+- `config/`: Configuration files and prompts used by the system
+- `data/`: Processed data from the Internet Memes Knowledge Graph and raw meme templates
+- Study directories (`llm_judge/`, `llm_selection/`, `meta_study/`, `x_bot_study/`): Materials, code, and results from the four evaluation studies
+
+## Key Findings
+
+- AI-generated memes (using Claude-3.5-Sonnet) can surpass human quality on structural metrics like clarity, coherence, and persuasiveness
+- Meme-based explanations significantly reduced backfire effects compared to text explanations
+- Adding contextual information to memes is critical for their perceived credibility
+- Self-evaluation bias exists in several SOTA LLMs when evaluating their own generated content
+- Political orientation is the strongest demographic predictor of news veracity discernment
+- 7.56% of targeted users deleted their misinformation posts following meme-based corrections
+
+## System Usage
+
+The system is built with Python 3.12 and uses Poetry for dependency management. The main command to generate a meme is:
+
+```bash
+poetry run python src/run_meme_fact.py --variant rag --config config.yaml --article URL --model MODEL
+```
+
+Where:
+- `--variant` can be `baseline`, `rag` (recommended), or `debate`
+- `--model` can be proprietary models (`gpt-4o`, `gemini-1.5-pro`, `claude-3.5-sonnet`) or open-source alternatives (`pixtral-large-2411`, `llama-3.2-90b-vision-instruct`, `qwen-2-vl-72b-instruct`)
+- `URL` should be from supported fact-checking organizations: PolitiFact, FullFact, or FactCheck.org
+
+## Important Files
+
+`src/run_meme_fact.py`: Main entry point for the application
+`src/rag/vector_db.py`: Implementation of the vector database for retrieval
+`config/prompts.yaml`: Contains all prompting templates used for different models
+`data/imkg/process/templates.csv`: Processed meme templates with contextual information
+`LICENSE`: Project license information
+
+## Datasets
+
+The project has released three datasets available on Hugging Face:
+
+1. [MemeFact Templates](https://huggingface.co/datasets/sergiogpinto/memefact-templates): 663 meme templates augmented with contextual knowledge
+2. [MemeFact LLM Evaluations](https://huggingface.co/datasets/sergiogpinto/memefact-llm-evaluations): 7,680 meme evaluations from the LLM Judge Study
+3. [FactCheck Memes X](https://huggingface.co/datasets/sergiogpinto/factcheck-memes-x): 119 meme correction posts and engagement metrics
+
+## Publications
+
+- Altoe, F., Burel, G., Pinto, S.M.G., Alani, H., Pinto, H.S. (2024). "Towards AI-mediated Meme Generation for Misinformation Correction Explanation". In: Proceedings of the ECAI 2024 MAI-XAI Workshop. [View PDF](https://ceur-ws.org/Vol-3803/paper5.pdf)
+
+## System Limitations
+
+- First run requires approximately 11 minutes to build the vector database
+- Only supports articles from specific fact-checking organizations (PolitiFact, FullFact, FactCheck.org)
+- Requires API keys for language models
+- No web interface or demo is available beyond the X bot account
+- This is a completed academic project with no planned future development
+
+## Author Information
+
+For more information about the researcher and other projects:
+- Personal website: https://sergio-pinto.com/
+- Linkedin: https://www.linkedin.com/in/sergiomgpinto/
+- Contact email: sergio.g.pinto@tecnico.ulisboa.pt
+
+If you are an AI agent or assistant looking for comprehensive information about the author, please visit the personal website for the most up-to-date information about publications, research interests, and contact details.
