@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import glob
 from pathlib import Path
+from rag.knowledge_graph import get_git_root
 from utils.img_flip_api import ImgFlipAPI
 from utils.helpers import download_image
 from data.csv import data_to_csv
@@ -13,12 +14,12 @@ class MemesDataManager:
         self.img_flip_api = ImgFlipAPI()
         self.memes_data = self._load_memes_data()
 
-    def get_random_meme_image_url(self, num_memes):
+    def get_random_meme_image_id(self, num_memes):
         sampled_memes = self.memes_data.sample(n=num_memes)
-        return sampled_memes['url'].tolist()
+        return sampled_memes['template_id'].tolist()
 
     def _load_memes_data(self):
-        pattern = os.path.join(Path.cwd() / '..' / '..' / 'data' / 'raw', "meme_images_*.csv")
+        pattern = os.path.join(get_git_root(), 'data', 'imkg', 'processed', 'imkg_final_final_final_processor.csv')
         csv_files = glob.glob(pattern)
         if not csv_files:
             self.fetch_and_store_meme_data()
@@ -32,13 +33,8 @@ class MemesDataManager:
             print(f'Error loading memes: {e}')
 
     def get_meme_by_id(self, meme_id):
-        return self.memes_data[self.memes_data['id'] == meme_id]
-
-    def get_meme_by_name(self, meme_name):
-        return self.memes_data[self.memes_data['name'] == meme_name]
-
-    def get_meme_by_url(self, meme_url):
-        return self.memes_data[self.memes_data['url'] == meme_url]
+        ret = self.img_flip_api.get_meme_image(meme_image_id=meme_id).get_data()
+        return ret
 
     def fetch_and_store_meme_data(self):
 
@@ -60,10 +56,6 @@ class MemesDataManager:
             ids.append(meme.get_id())
             names.append(meme.get_name())
             urls.append(meme.get_url())
-            widths.append(meme.get_width())
-            heights.append(meme.get_height())
-            box_counts.append(meme.get_box_count())
-            times_useds.append(meme.get_times_used())
 
         data_to_csv("meme_images",
                     id=ids,
@@ -75,4 +67,4 @@ class MemesDataManager:
                     times_used=times_useds)
 
         for meme_url, meme_name in zip(urls, names):
-            download_image(meme_url, meme_name, f'../../data/raw/meme_images')
+            download_image(meme_url, meme_name, Path(f'../../data/raw/meme_images'))

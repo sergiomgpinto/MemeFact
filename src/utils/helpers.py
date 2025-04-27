@@ -30,13 +30,23 @@ def download_image(url: str, filename: str, save_directory: Path) -> str:
         with open(save_path, 'wb') as file:
             for chunk in response.iter_content(chunk_size=8192):
                 file.write(chunk)
-
         print(f"Saved meme at path: {save_path}")
         return str(save_path)
 
     except requests.RequestException as e:
         print(f"Error downloading image: {e}")
         return ""
+
+
+def download_meme_temp(url: str) -> str:
+    root_dir = Path(get_git_root())
+    temp_dir = root_dir / 'temp'
+    timestamp = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+
+    meme_filename = f'{url}_{timestamp}'
+    temp_dir.mkdir(parents=True, exist_ok=True)
+
+    return download_image(url, meme_filename, temp_dir)
 
 
 def download_memes(memes: List[Meme], bot_run: bool):
@@ -64,8 +74,21 @@ def load_config(config_file: str):
         return yaml.safe_load(file)
 
 
+# def encode_image_base64(url: str):
+#     return base64.b64encode(httpx.get(url).content).decode('utf-8')
 def encode_image_base64(url: str):
-    return base64.b64encode(httpx.get(url).content).decode('utf-8')
+    """Fetch image from URL and encode it as base64"""
+    try:
+        headers = {"User-Agent": "Mozilla/5.0"}  # Prevent Google from blocking the request
+        response = requests.get(url, stream=True, headers=headers)
+        response.raise_for_status()  # Raise an error if request fails
+
+        # Convert response content to base64
+        return base64.b64encode(response.content).decode('utf-8')
+
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching image from URL: {url} - {e}")
+        return None  # Return None if the image can't be fetched
 
 
 def is_date_more_recent(new_date: str, starting_date: str) -> bool:

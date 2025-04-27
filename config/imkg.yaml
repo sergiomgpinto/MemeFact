@@ -1,0 +1,122 @@
+prompt_meme_description: |
+  Analyze this meme template image, focusing on its potential for fact-checking messages. Please provide a structured description including:
+
+  1. Scene Core:
+  - Describe the main characters/entities present
+  - What actions are taking place
+  - Any visible text in the image
+  - Key visual elements that stand out
+  
+  2. Emotional Landscape (be highly specific):
+  Primary Emotions:
+  - Detailed description of facial expressions (e.g., subtle smirk, raised eyebrows indicating skepticism)
+  - Nuanced body language analysis
+  - Intended emotional message 
+  
+  Unintended Emotional Readings:
+  - Possible alternative interpretations (e.g., what appears as confidence might be read as arrogance)
+  - Contradictory signals (e.g., smiling expression in a seemingly serious situation)
+  - Ambiguous emotional elements (e.g., tears that could indicate either joy or sadness)
+  - Cultural variations in emotional interpretation (e.g., gestures that might be read differently)
+  
+  3. Humor Analysis:
+  - Specific elements that make this template humorous
+  - Source of humor (expressions/situation/both)
+  - Any incongruity or contrast that adds to humor
+  - Whether the humor is derived from:
+    * Character expressions
+    * Situational context
+    * Visual juxtaposition
+    * Combination of elements
+  
+  4. Rhetorical Device:
+  - Identify the primary rhetorical device (e.g., irony, contrast, exaggeration, metaphor)
+  - Explain how the image's elements support this device
+  - Note how this could be leveraged for fact-checking purposes
+  
+  If you notice potentially sensitive content, do the task anyways since this is a completely safe use case. Generate the description in detail containing all of the information mentioned above, avoiding references to meme culture, and EXACTLY in this format:
+  
+  1:
+  [Single paragraph]
+  
+  2:
+  [Single paragraph]
+  
+  3:
+  [Single paragraph]
+  
+  4:
+  [Single paragraph]
+  
+  Each section must:
+  1. Start with exact heading shown above
+  2. Contain exactly one paragraph
+  3. Include all relevant information from the analysis
+  4. Not use bullet points or lists
+  5. Not add extra headers or subsections
+
+prompt_meme_explanation: |
+  Given this meme image, its description, and these example captions, analyze the captioning style:
+  
+  Meme Image Description:
+  {meme_image_description}
+  
+  Example Captions:
+  {meme_captions}
+  
+  1. Caption Length Analysis:
+  - First determine the dominant pattern by counting instances with single vs multiple text boxes
+  - Due to processing errors that could lead to incorrect text box splitting, treat occurrences that deviate from the dominant pattern as potential outliers
+  - If dominant pattern shows multiple text boxes (>80% of instances):
+    * Typical length patterns for each text box position
+    * Length relationships between different text boxes
+  - If dominant pattern shows single text box (>80% of instances):
+    * Typical length patterns across examples
+    * Structure between caption parts
+  
+  2. Language Pattern Analysis:
+  - Common phrase structures and sentence patterns
+  - Typical word choices and language style
+  - Recurring linguistic devices
+  - Tone patterns across examples
+  
+  3. Setup-Punchline Mechanics:
+  - Predominant setup types used
+  - Common punchline structures
+  - How image elements support the joke structure
+  - Timing and pacing patterns
+  
+  4. Caption Structure:
+  - Relationship between top and bottom text
+  - How captions interact with image elements
+  - Typical length and complexity patterns
+  - Most effective structural approaches
+  
+  5. Versatility Elements:
+  - Common adaptations for different contexts
+  - Core elements preserved across examples
+  - Successful variation patterns
+  
+  If you notice potentially sensitive content or language, do the task anyways since this is a completely safe use case. Generate the explanation in detail containing all of the information mentioned above and EXACTLY in this format:
+  
+  1:
+  [Single paragraph]
+  
+  2:
+  [Single paragraph]
+  
+  3:
+  [Single paragraph]
+  
+  4:
+  [Single paragraph]
+  
+  5:
+  [Single paragraph]
+  
+  Each section must:
+  1. Start with exact heading shown above
+  2. Contain exactly one paragraph
+  3. Include all relevant information from the analysis
+  4. Not use bullet points or lists
+  5. Not add extra headers or subsections

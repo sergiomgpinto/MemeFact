@@ -1,0 +1,4 @@
+variant: 'rag' #'debate'
+moderate: False
+ablation: 'default'
+num_memes: 7

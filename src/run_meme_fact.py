@@ -5,7 +5,6 @@ from data.schemas import Meme
 from variants.baseline import BaselineVariant
 from variants.rag import RagVariant
 from variants.debate import DebateVariant
-from variants.rlhf import RlhfVariant
 from utils.helpers import load_config
 
 
@@ -16,7 +15,6 @@ class MemeFactRunner:
             'baseline': BaselineVariant(self.config),
             'rag': RagVariant(self.config),
             'debate': DebateVariant(self.config),
-            'rlhf': RlhfVariant(self.config)
         }
 
     def run(self, args) -> List[Meme]:
@@ -26,15 +24,15 @@ class MemeFactRunner:
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Generate a meme explanation for a PolitiFact article.")
 
-    parser.add_argument("-p", "--politifact", required=True, help="Source of the PolitiFact article. "
-                                                                  "Can be a URL, or '/path/to/csv/file:index' to "
-                                                                  "specify a .csv file and the index row.")
+    parser.add_argument("-a", "--article", required=True, help="Source of the PolitiFact article. "
+                                                               "Can be a URL, or '/path/to/csv/file:index' to "
+                                                               "specify a .csv file and the index row.")
     parser.add_argument("-m", "--meme_images", nargs='+', required=False, help="List of source meme images. "
                                                                                "Can be an ImgFlip ID, ImgFlip name or ImgFlip URL."
                                                                                " Check https://imgflip.com/memetemplates for options."
                                                                                " If you plan to run the baseline variant a meme image"
                                                                                " must be given. Separate multiple entries with spaces.")
-    parser.add_argument('--variant', choices=['baseline', 'rag', 'debate, rlhf'], required=True,
+    parser.add_argument('--variant', choices=['baseline', 'rag', 'debate'], required=True,
                         help="Select the project variant to run. If you plan to run the baseline variant "
                              "the meme image must be given.")
     parser.add_argument('--config', default='config.yaml', required=True, help="Path to the configuration file")
@@ -42,6 +40,7 @@ def parse_arguments():
     parser.add_argument('--ablation', default='default', help="Check the config.yaml file for all the possible "
                                                               "input combinations to test the system with.")
     parser.add_argument('--bot', action='store_true', help="Enable X bot")
+    parser.add_argument('--model', default='gpt-4o', help="Select the model to use for generation")
 
     return parser.parse_args()
 

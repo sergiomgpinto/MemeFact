@@ -1,0 +1,6 @@
+Baseline CFA Model Fit Indices for Mist-8 Overall Sample:
+  Chi-square: 28.96
+  Degrees of Freedom: 19
+  CMIN/df: 1.52
+  CFI: 0.95
+  RMSEA: 0.041

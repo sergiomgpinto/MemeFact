@@ -1,3 +1,3 @@
-__all__ = ['knowledge_base', 'knowledge_graph']
+__all__ = ['knowledge_graph', 'vector_db']
 
 

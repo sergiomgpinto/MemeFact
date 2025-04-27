@@ -42,7 +42,7 @@ class ImgFlipAPI:
     def caption_meme_image(self,
                            meme_image_id: int,
                            captions: Optional[List[str]] = None,
-                           no_watermark: bool = False) -> HttpResponse:
+                           no_watermark: bool = True) -> HttpResponse:
         url = f"{self.BASE_URL}/caption_image"
 
         data = {
@@ -98,8 +98,8 @@ class ImgFlipAPI:
         encoded_data = urlencode(data)
 
         try:
-            response = requests.get(url, data=encoded_data,
-                                    headers={'Content-Type': 'application/x-www-form-urlencoded'})
+            response = requests.post(url, data=encoded_data,
+                                     headers={'Content-Type': 'application/x-www-form-urlencoded'})
             response.raise_for_status()
 
             result = response.json()
@@ -113,7 +113,7 @@ class ImgFlipAPI:
                                        box_count=result['data']['meme']['box_count'],
                                        times_used=result['data']['meme']['captions'])  # all time
                 return HttpResponse.success(
-                    data={meme_image},
+                    data=meme_image,
                     message="Meme created successfully"
                 )
             else:
@@ -126,3 +126,10 @@ class ImgFlipAPI:
                 message=f"An exception occured while getting the meme: {str(e)}",
                 status_code=500
             )
+
+
+if __name__ == '__main__':
+    api = ImgFlipAPI()
+    response = api.get_meme_image(216951317)
+    #response = api.caption_meme_image(181913649, ["Hello", "World"])
+    print(response)

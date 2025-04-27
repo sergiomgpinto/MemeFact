@@ -7,10 +7,17 @@ from modules.module3_generation import DebateGenerationModule
 class DebateVariant(MemeFact):
 
     def _run_impl(self, input_module: InputModule, **kwargs):
-
         selection_module = SelectionModule(input_module=input_module)
-        generation_module = DebateGenerationModule(selection_module=selection_module)
+        generation_module = DebateGenerationModule(selection_module=selection_module,
+                                                   ablation_input=input_module.get_ablation_input(),
+                                                   generators=kwargs['generators'],
+                                                   evaluators=kwargs['evaluators'],
+                                                   params=kwargs['model_params'],
+                                                   parse=kwargs['parse'])
 
-        self._run_moderation_pipeline(generation_module=generation_module,
-                                      num_memes=kwargs['debate']['num_memes'],
-                                      enable_moderation=kwargs['enable_moderation'])
+        return self._run_moderation_pipeline(generation_module=generation_module,
+                                             num_memes=self.config[self.class_name]['num_memes']
+                                             if not kwargs['bot'] else kwargs['num_memes'],
+                                             model=kwargs['model'],
+                                             prompt_type=self.config[self.class_name]['prompt_type'],
+                                             enable_moderation=kwargs['moderate'])

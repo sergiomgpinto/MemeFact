@@ -1,0 +1,21 @@
+models: ['gpt-4o', 'gemini-1.5-pro', 'claude-3.5-sonnet', 'llama-3.2-90b-vision-instruct', 'pixtral-large-2411', 'qwen-2-vl-72b-instruct', 'qwq-32b-preview']
+moderation:
+  hmd: 'openai/clip-vit-base-patch32'
+  threshold: 0.9
+variant: 'rag'
+rag:
+  num_memes: 7
+  prompt_type: 'few-shot'
+moderate: False
+meme_images: []
+articles: [''] # add article links
+ablation:
+  combinations:
+    "c+v+r": ['claim','verdict','rationale']
+    "c+v+iytis": ['claim','verdict','iytis']
+    "c+v+r+iytis": ['claim','verdict','rationale','iytis']
+    "mi+c+v+r": ['meme_images','claim','verdict','rationale']
+    "default": ['meme_images','claim','verdict','iytis', 'title']
+    "mi+c+v+r+iytis": ['meme_images','claim','verdict','rationale','iytis']
+model_params:
+  max_tokens: 512

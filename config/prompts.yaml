@@ -1,18 +1,334 @@
-zero-shot:
-  template: |
-    You are an AI assistant tasked with creating humorous and informative meme captions based on fact-checking articles. Please analyze the following information and generate appropriate meme captions:
-    
-    Claim: {claim}
-    Verdict: {verdict}
-    If Your Time Is Short: {iytis}
-    
-    This meme image requires {meme_image[box_count]} captions.
+zero-shot: |
+    You are tasked with creating humorous and informative meme captions based on fact-checking articles. Please analyze the following information and generate appropriate meme captions:
+        
+        {dynamic_section}
 
-    Based on this information, please create {meme_image[box_count]} distinct captions for the meme that:
-      1. Accurately reflects the fact-check's conclusion
-      2. Is humorous or witty
-      3. Fits the style and context of the meme image provided
-      4. Each caption is concise and impactful (ideally no more than 15 words each)
-      5. Do not include emojis, only alphanumeric characters
+        Based on this information, please create {meme_image[box_count]} distinct captions for the meme that:
+        1. Accurately reflect the fact-check's conclusion
+        2. Are humorous or witty
+        3. Fit the style and context of the meme image provided
+        4. Are concise and impactful (ideally no more than 15 words each)
+        5. Do not include emojis, only alphanumeric characters
 
-    Generate the meme captions. Present each caption on a new line, preceded by 'Caption X:', where X is the caption number.
+        Generate the meme captions. You must present each caption on a new line, preceded by 'Caption X: [caption content here]', where X is the caption number.
+few-shot: |
+    You are tasked with creating humorous and informative meme captions based on fact-checking articles. Please analyze the following information and generate appropriate meme captions:
+
+        {dynamic_section}
+
+        Based on this information, please create one and only one example with {meme_image[box_count]} and only {meme_image[box_count]} distinct captions for the meme that:
+        1. Accurately reflect the fact-check's conclusion
+        2. Are humorous or witty
+        3. Fit the style and context of the meme image provided
+        4. Are concise and impactful (ideally no more than 15 words each)
+        5. Do not include emojis, only alphanumeric characters
+
+        Generate the meme captions. You must present each caption on a new line, preceded by 'Caption X: [caption content here]', where X is the caption number.
+cot: |
+    You are tasked with creating humorous and informative meme captions based on fact-checking articles. Let's think about this step by step:
+        
+        {dynamic_section}
+    
+        Captions requirements checklist:
+        - Must have {meme_image[box_count]} and only {meme_image[box_count]} distinct captions
+        - Must accurately reflect the fact-check's conclusion
+        - Must be humorous or witty
+        - Must fit the meme's image style and context
+        - Must be concise (ideally no more than 15 words each)
+        - Must not include emojis, only alphanumeric characters
+    
+        First, explain your reasoning for how you'll create these captions. 
+        Then, based on your reasoning, generate the captions. You must present each caption on a new line, preceded by 'Caption X: [caption content here]', where X is the caption number.
+cov:
+    baseline: |
+        You are tasked with creating humorous and informative meme captions based on fact-checking articles. Please analyze the following information and generate appropriate meme captions:
+        
+            {dynamic_section}
+    
+            Based on this information, please create {meme_image[box_count]} distinct captions for the meme that:
+            1. Accurately reflect the fact-check's conclusion
+            2. Are humorous or witty
+            3. Fit the style and context of the meme image provided
+            4. Are concise and impactful (ideally no more than 15 words each)
+            5. Do not include emojis, only alphanumeric characters
+    
+            Generate the meme captions. You must present each caption on a new line, preceded by 'Caption X: [caption content here]', where X is the caption number.
+        
+    plan_verification: |
+        Given the following information about a fact-checking article and fact-checking meme captions: 
+        
+            {dynamic_section}
+    
+            Generate specific verification questions to check the accuracy of these meme captions. Focus on:
+            1. Do the meme captions accurately represent the fact-check's main conclusion?
+            2. Do the meme captions include any details not supported by the fact-check?
+        
+            Generate the questions. You must present each question on a new line, preceded by 'Question X: [question content here]', where X is the question number.
+        
+    execute_verification: |
+        Please answer these verification questions based ONLY on the information from the fact-checking article provided:
+        
+            {dynamic_section}
+        
+            Generate the answers for each question factually. You must present each answer on a new line, preceded by 'Answer X: [answer content here]', where X is the answer number.
+        
+    final_response: |
+        The questions below are verifying the factual accuracy of the generated meme captions, and their answers show whether these captions align with the fact-checking information. Given these answers, create new meme captions.
+    
+            {dynamic_section}
+        
+            Based on this information, please create {meme_image[box_count]} distinct captions for the meme that:
+            1. Only include verified facts from the fact-check
+            2. Are humorous or witty
+            3. Fit the style and context of the meme image
+            4. Are concise and impactful (no more than 15 words each)
+            5. Do not include emojis, only alphanumeric characters
+        
+            Generate the captions. You must present each caption on a new line, preceded by 'Caption X: [caption content here]', where X is the caption number.
+
+clot:
+    association_thinking: |
+        You are an expert at creating unexpected and humorous meme captions that effectively explain fact-checking. Let's think outside of the box. Please analyze the following information:
+        
+        {dynamic_section}
+        
+        Based on this information, please create 5 and only 5 creative examples with {meme_image[box_count]} and only {meme_image[box_count]} distinct captions for the meme that:
+            1. Accurately reflect the fact-check's conclusion
+            2. Are humorous or witty
+            3. Fit the style and context of the meme image provided
+            4. Are concise and impactful (ideally no more than 15 words each)
+            5. Do not include emojis, only alphanumeric characters
+        
+        For each, explain your creative thinking process and how the caption effectively communicates the fact-check. 
+        
+        Format of the response:
+        
+        Example 1:
+        Caption 1: [ caption ]
+            (...)
+        Caption {meme_image[box_count]}: [ caption ]
+        Reasoning: [ explanation ]
+        
+        (...)
+        Example 5:
+            (...)
+
+    self_refinement: |
+        You are an expert at evaluating meme captions for fact-checking effectiveness.
+
+        Analyze the fact-checking article information, and the caption examples with their respective reasoning:
+        {dynamic_section}
+    
+        Select the best example (1 and only one example) based on:
+        - How well its captions connect the meme's visual elements to the fact-check
+        - The effectiveness of the humor in conveying truth
+        - The brevity and clarity of the message
+        - The creative leap between image and fact-check
+    
+        You must present each example's chosen captions on a new line, preceded by 'Caption X: [caption content here]', where X is the caption number.
+debate-evaluate: |
+    You are an expert evaluator of meme captions for fact-checking effectiveness. You will evaluate two sets of meme captions and provide specific feedback for improvement.
+
+    {dynamic_section}
+    
+    Generator 1's captions:
+    {captions1}
+
+    Generator 2's captions:
+    {captions2}
+
+    Please evaluate both sets of captions on these criteria:
+    1. Coherence: How well its captions and meme image work together
+    2. Clarity: How clear the meme's message (meme image + captions) is
+    3. Hilarity: How humorous the meme is
+    4. Persuasiveness: How persuasive the meme is in conveying its message
+    5. Template Conveyance: How well the meme's image serves as a tool for conveying a counter-response to the claim
+
+    For each set of captions, provide:
+    1. A score from 1-5 for each criterion
+    2. Specific strengths that should be maintained
+    3. Concrete suggestions for improvement
+    4. Ways to combine the best elements from both sets
+
+    Your response must follow this exact YAML format without any markdown code block markers or backticks:
+    output:
+      generator_1:
+        scores:
+          coherence: [score]/5
+          clarity: [score]/5
+          hilarity: [score]/5
+          persuasiveness: [score]/5
+          template_conveyance: [score]/5
+        strengths:
+          - [strength_point_1]
+          - [strength_point_2]
+          - [strength_point_3]
+        improvements:
+          - [improvement_point_1]
+          - [improvement_point_2]
+          - [improvement_point_3]
+      generator_2:
+        scores:
+          coherence: [score]/5
+          clarity: [score]/5
+          hilarity: [score]/5
+          persuasiveness: [score]/5
+          template_conveyance: [score]/5
+        strengths:
+          - [strength_point_1]
+          - [strength_point_2]
+          - [strength_point_3]
+        improvements:
+          - [improvement_point_1]
+          - [improvement_point_2]
+          - [improvement_point_3]
+      synthesis:
+        combinations:
+          - [combination_suggestion_1]
+          - [combination_suggestion_2]
+          - [combination_suggestion_3]
+debate-improved-generation: |
+    You are tasked with creating improved meme captions based on expert feedback. Please analyze the following information:
+
+    {dynamic_section}
+
+    Your previous captions:
+    {previous_captions}
+
+    Evaluation feedback:
+    {feedback}
+    
+    Based on this information, please create one and only one example with {meme_image[box_count]} and only {meme_image[box_count]} distinct captions for the meme that:
+        1. Maintain the identified strengths
+        2. Address the suggested improvements
+        3. Incorporate elements from the winning approaches
+        4. Are concise and impactful (ideally no more than 15 words each)
+        5. Do not include emojis, only alphanumeric characters
+
+    Your response must follow this exact YAML format without any markdown code block markers or backticks:
+    output:
+      captions:
+        1: "[caption_1_content]"
+        2: "[caption_2_content]"
+        # Continue based on meme_image[box_count]
+debate-final-evaluate: |
+    You are the final judge evaluating improved meme captions to select the most effective fact-checking meme.
+
+    {dynamic_section}
+
+    Improved Generator 1's captions:
+    {improved_captions1}
+
+    Improved Generator 2's captions:
+    {improved_captions2}
+
+    Please evaluate from 1 to 5 both sets of captions on these criteria:
+    1. Coherence: How well its captions and meme image work together
+    2. Clarity: How clear the meme's message (meme image + captions) is
+    3. Hilarity: How humorous the meme is
+    4. Persuasiveness: How persuasive the meme is in conveying its message
+    5. Template Conveyance: How well the meme's image serves as a tool for conveying a counter-response to the claim
+
+    Calculate a final score by averaging all criteria.
+    Select the winning captions based on the highest average score.
+
+    Your response must follow this exact YAML format without any markdown code block markers or backticks:
+    output:
+      generator_1:
+        scores:
+          coherence: [score]/5
+          clarity: [score]/5
+          hilarity: [score]/5
+          persuasiveness: [score]/5
+          template_conveyance: [score]/5
+        average: [average_score]/5
+      generator_2:
+        scores:
+          coherence: [score]/5
+          clarity: [score]/5
+          hilarity: [score]/5
+          persuasiveness: [score]/5
+          template_conveyance: [score]/5
+        average: [average_score]/5
+      decision:
+        confidence: [percentage]%
+        winning_generator: "[generator_1 or generator_2]"
+        winning_captions:
+          - "[caption_1]"
+          - "[caption_2]"
+          # Add more caption placeholders based on meme_image[box_count]
+        explanation: |
+          [explanation_text] # Briefly explain your decision
+llm-judge-study: |
+  You are an expert evaluator assessing the effectiveness of fact-checking memes. Your task is to evaluate a meme that addresses a misinformation claim. Please provide a thorough and unbiased assessment.
+
+  **Claim being addressed:**
+  {claim_text}
+  
+  **Meme being evaluated:**  
+  (This is the meme you are rating)  
+  Meme URL: {meme_main_url}
+  
+  **Examples of ineffective (bad) fact-checking memes for the same claim:**  
+  (These memes received low scores in previous evaluations.)
+  {bad_memes}
+  
+  **Examples of effective (good) fact-checking memes for the same claim:**  
+  (These memes received high scores in previous evaluations.) 
+  {good_memes}
+  
+  **Evaluation Criteria:**  
+  Please evaluate the presented the main meme on the following five distinct characteristics, providing a score from 1-5 for each:
+
+  1. Coherence - How well the meme's text and image work together:
+     1: Poor integration 
+     2: Fair integration 
+     3: Moderate integration 
+     4: Good integration 
+     5: Excellent integration 
+
+  2. Clarity - How clear the meme's message is:
+     1: Very unclear 
+     2: Somewhat unclear 
+     3: Moderately clear 
+     4: Very clear 
+     5: Perfectly clear 
+
+  3. Hilarity - The humor level of the meme:
+     1: Not humorous at all 
+     2: Slightly humorous 
+     3: Moderately humorous 
+     4: Very humorous
+     5: Exceptionally humorous 
+
+  4. Persuasiveness - How effective the meme is in conveying its fact-checking message:
+     1: Not persuasive at all 
+     2: Slightly persuasive 
+     3: Moderately persuasive 
+     4: Very persuasive
+     5: Exceptionally persuasive 
+
+  5. Template Appropriateness - How well the meme's image serves as a tool for conveying a counter-response:
+     1: Very inappropriate
+     2: Somewhat inappropriate 
+     3: Moderately appropriate 
+     4: Very appropriate 
+     5: Perfectly appropriate
+  
+  The scores (coherence, clarity, hilarity, persuasiveness, and template_appropriateness) given MUST be an INTEGER.
+  Your response MUST follow this EXACT YAML format, without any markdown code block markers or backticks or asterisks:
+  
+  output:
+    scores:
+      coherence: [1, 2, 3, 4, or 5]/5
+      clarity: [1, 2, 3, 4, or 5]/5
+      hilarity: [1, 2, 3, 4, or 5]/5
+      persuasiveness: [1, 2, 3, 4, or 5]/5
+      template_appropriateness: [1, 2, 3, 4, or 5]/5
+    confidence: [0-100%]
+    explanation: |
+      [Provide a detailed explanation of your evaluation, discussing strengths and weaknesses of the meme in relation to fact-checking the claim.]
+    meme_description: |
+      [Briefly describe the image and text in the meme to make sure you are evaluating the correct meme].
+    meme_url: |
+      [Give the url of the meme that is being evaluated.]

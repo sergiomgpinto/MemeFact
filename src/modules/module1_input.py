@@ -9,10 +9,12 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class AblationInput:
-    claim: str
-    verdict: str
     rationale: Optional[str] = None
+    claim: Optional[str] = None
+    verdict: Optional[str] = None
     iytis: Optional[str] = None
+    title: Optional[str] = None
+    fact_checker: Optional[str] = None
     meme_images: Optional[List[MemeImage]] = field(default_factory=list)
 
     def get_claim(self):
@@ -57,15 +59,11 @@ class InputModule:
         article = self.input.get_article()
         meme_images = self.input.get_meme_images()
 
-        possible_inputs = {'meme_images': meme_images,
-                           'claim': article.get_claim(),
-                           'verdict': article.get_verdict(),
-                           'iytis': article.get_iytis(),
-                           'rationale': article.get_rationale()}
+        possible_inputs = {'meme_images': meme_images, **article.to_dict()}
 
         for key, value in ablation_dict['combinations'].items():
             if key == ablation_mode:
                 filtered_inputs = {k: v for k, v in possible_inputs.items() if k in value}
-                ablation_input = AblationInput(**filtered_inputs)
+                filtered_inputs['fact_checker'] = article.__class__.__name__[:-7].lower()
                 return AblationInput(**filtered_inputs)
         raise ValueError('Wrong ablation mode. Check the config.yaml for the possible combinations.')

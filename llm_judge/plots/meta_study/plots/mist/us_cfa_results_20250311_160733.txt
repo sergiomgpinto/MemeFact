@@ -1,0 +1,6 @@
+Baseline CFA Model Fit Indices for US Sample (Combined):
+  Chi-square: 220.21
+  Degrees of Freedom: 34
+  CMIN/df: 6.48
+  CFI: 0.88
+  RMSEA: 0.133

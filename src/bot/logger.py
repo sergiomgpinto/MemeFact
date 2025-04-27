@@ -1,5 +1,4 @@
 import logging
-import os
 from datetime import datetime
 from pathlib import Path
 from utils.helpers import get_git_root

@@ -1,0 +1,17 @@
+MIST-8 Full Scale Reliability:
+  Cronbach's alpha: 0.61
+  95% CI: [0.54, 0.67]
+  Mean (score): 6.07
+  SD (score): 1.74
+
+MIST-8 Fake Items:
+  Cronbach's alpha: 0.40
+  95% CI: [0.28, 0.50]
+  Mean (score): 2.83
+  SD (score): 1.07
+
+MIST-8 Real Items:
+  Cronbach's alpha: 0.47
+  95% CI: [0.36, 0.56]
+  Mean (score): 3.23
+  SD (score): 0.96

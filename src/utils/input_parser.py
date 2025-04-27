@@ -2,9 +2,9 @@ import logging
 import os
 import pandas as pd
 from typing import Any
-from data.schemas import InputData, FactCheckingArticle, MemeImage
+from data.schemas import InputData, MemeImage, PolitiFactArticle, FullFactArticle, FactCheckArticle
+from data.scrapers.scrape_politifact import scrape_article
 from utils.validators import validate_url
-from data.scrape_politifact import politifact_specific_article_scraper
 from data.img_flip_memes import MemesDataManager
 
 logging.basicConfig(level=logging.INFO)
@@ -24,22 +24,29 @@ class ParserError(Exception):
 class InputParser:
 
     def __init__(self, args: Any):
-        self.article_source = args['politifact']
+        self.article_source = args['article']
         self.meme_image_sources = args['meme_images']
         self.meme_data_manager = MemesDataManager()
         self.variant = args['variant']
+        self.articleTypes = {
+            'politifact': lambda article_parts: PolitiFactArticle(**article_parts),
+            'fullfact': lambda article_parts: FullFactArticle(**article_parts),
+            'factcheck': lambda article_parts: FactCheckArticle(**article_parts)
+        }
 
     def parse(self):
         input_data = InputData()
 
-        if self.variant == "baseline" and not self.meme_image_sources:
+        if self.variant == 'baseline' and not self.meme_image_sources:
             raise ParserError("Baseline variant requires a meme image")
 
         if not isinstance(self.article_source, str):
             raise ParserError("Invalid politifact source. Must be a URL, /path/to/txt/file, or "
                               "'/path/to/csv/file:index'.")
 
-        if self.article_source.startswith('https://www.politifact.com/factchecks/'):
+        if (self.article_source.startswith('https://www.politifact.com/factchecks/') or
+                self.article_source.startswith('https://fullfact.org/') or
+                self.article_source.startswith('https://www.factcheck.org/')):
             # Article source is a url.
             response = validate_url(self.article_source)
             if response.get_is_success():
@@ -53,8 +60,8 @@ class InputParser:
             self.article_source = article_path
             if not os.path.isfile(article_path):
                 raise ParserError("There does not exist a csv file at the path given.")
-            if not self.article_source.lower().endswith('.csv'):
-                raise ParserError("File is not a csv.")
+            if not self.article_source.lower().endswith('.csv') and not self.article_source.lower().endswith('.jsonl'):
+                raise ParserError("Unsupported file extension.")
             if not index.isdigit() or int(index) < 0:
                 raise ParserError("The index must be a positive 0 included integer.")
             article = self.csv_to_article(int(index))
@@ -85,45 +92,34 @@ class InputParser:
             raise ParserError(f"Invalid meme image source: {source}")
 
     def csv_to_article(self, row_index):
-        df = pd.read_csv(self.article_source)
+        if self.article_source.lower().endswith('.jsonl'):
+            df = pd.read_json(self.article_source, lines=True)
+        else:
+            df = pd.read_csv(self.article_source)
         if row_index >= len(df):
             raise ParserError(f'Invalid row index: {row_index}. File has {len(df)} rows.')
-
         article_data = df.iloc[row_index].to_dict()
-
-        return FactCheckingArticle(claim=article_data['claim'],
-                                   verdict=article_data['verdict'],
-                                   rationale=article_data['rationale'],
-                                   iytis=article_data['iytis'],
-                                   source=article_data['source'],
-                                   date=article_data['date'])
+        article_data['date'] = str(article_data['date'])
+        return self.articleTypes[article_data['fact_checker'].lower()](article_data)
 
     def url_to_article(self):
-        article_dict = politifact_specific_article_scraper(self.article_source, True)[0]
+        article_dict = scrape_article(self.article_source)
         if not article_dict:
             raise ParserError(f'Could not scrape article from URL: {self.article_source}')
-        return FactCheckingArticle(claim=article_dict['claim'],
-                                   verdict=article_dict['verdict'],
-                                   rationale=article_dict['rationale'],
-                                   iytis=article_dict['iytis'],
-                                   url=self.article_source,
-                                   source=article_dict['source'],
-                                   date=article_dict['date'])
+        return self.articleTypes[article_dict['fact_checker'].lower()](article_dict)
 
     def meme_image_id_to_meme_image(self, meme_id):
         meme_info = self.meme_data_manager.get_meme_by_id(meme_id)
-        meme_info = meme_info.iloc[0].to_dict()
+        #meme_info = meme_info.iloc[0].to_dict()
+        #return MemeImage(**{k: v for k, v in meme_info.items() if k in ['id', 'name', 'url']})
+        return meme_info
 
-        return MemeImage(**meme_info)
+    # def url_to_meme_image(self, url):
+    #     meme_info = self.meme_data_manager.get_meme_by_url(url)
+    #     meme_info = meme_info.iloc[0].to_dict()
+    #     return MemeImage(**{k: v for k, v in meme_info.items() if k in ['id', 'name', 'url']})
 
-    def url_to_meme_image(self, url):
-        meme_info = self.meme_data_manager.get_meme_by_url(url)
-        meme_info = meme_info.iloc[0].to_dict()
-
-        return MemeImage(**meme_info)
-
-    def meme_image_name_to_meme_image(self, name):
-        meme_info = self.meme_data_manager.get_meme_by_name(name)
-        meme_info = meme_info.iloc[0].to_dict()
-
-        return MemeImage(**meme_info)
+    # def meme_image_name_to_meme_image(self, name):
+    #     meme_info = self.meme_data_manager.get_meme_by_name(name)
+    #     meme_info = meme_info.iloc[0].to_dict()
+    #     return MemeImage(**{k: v for k, v in meme_info.items() if k in ['id', 'name', 'url']})

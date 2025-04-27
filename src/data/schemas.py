@@ -1,24 +1,14 @@
 from dataclasses import field
-
 from pydantic import BaseModel, HttpUrl
 from typing import Optional, List
 from utils.validators import validate_url
 
 
 class FactCheckingArticle(BaseModel):
-    claim: str
-    verdict: str
     rationale: str
-    source: str = None
-    date: str = None
-    iytis: Optional[str] = None
-    url: Optional[HttpUrl] = None
-
-    def get_claim(self) -> str:
-        return self.claim
-
-    def get_verdict(self) -> str:
-        return self.verdict
+    source: Optional[str] = None
+    date: str
+    url: str
 
     def get_rationale(self) -> str:
         return self.rationale
@@ -26,18 +16,67 @@ class FactCheckingArticle(BaseModel):
     def get_date(self) -> str:
         return self.date
 
-    def get_iytis(self) -> Optional[str]:
-        return self.iytis
+    def get_source(self) -> str:
+        return self.source
 
-    def get_url(self) -> Optional[HttpUrl]:
+    def get_url(self) -> str:
         return self.url
 
-    def validate_url_on_demand(self) -> 'FactCheckingArticle':
-        if self.url:
-            result = validate_url(str(self.url))
-            if not result.is_success:
-                raise ValueError(f"Invalid URL for FactCheckingArticle: {result.message}")
-        return self
+    def to_dict(self) -> dict:
+        return {k: v for k, v in self.__dict__.items() if v is not None}
+
+
+class PolitiFactArticle(FactCheckingArticle):
+    claim: str
+    verdict: str
+    iytis: str
+
+    def get_claim(self) -> str:
+        return self.claim
+
+    def get_verdict(self) -> str:
+        return self.verdict
+
+    def get_iytis(self) -> str:
+        return self.iytis
+
+    def get_title(self) -> str:
+        return None
+
+
+class FullFactArticle(FactCheckingArticle):
+    title: str
+    claim: str
+    iytis: str
+
+    def get_claim(self) -> str:
+        return self.claim
+
+    def get_iytis(self) -> str:
+        return self.iytis
+
+    def get_title(self) -> str:
+        return self.title
+
+    def get_verdict(self) -> str:
+        return None
+
+
+class FactCheckArticle(FactCheckingArticle):
+    title: str
+    iytis: str
+
+    def get_iytis(self) -> str:
+        return self.iytis
+
+    def get_title(self) -> str:
+        return self.title
+
+    def get_claim(self) -> str:
+        return None
+
+    def get_verdict(self) -> str:
+        return None
 
 
 class MemeImage(BaseModel):
