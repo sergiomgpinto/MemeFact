@@ -13,9 +13,7 @@
 
 - **ECAI 2024 MAI-XAI Workshop (Published)**: Altoe, F., Burel, G., Pinto, S.M.G., Alani, H., Pinto, H.S. (2024). "Towards AI-mediated Meme Generation for Misinformation Correction Explanation". [View PDF](https://ceur-ws.org/Vol-3803/paper5.pdf)
 
-- **IJCAI Human-Centered AI Track (Under Review)**: To be disclosed. [Conference Homepage](https://2025.ijcai.org/call-for-papers-human-centred-artificial-intelligence/)
-
-- **Human Behavior and Emerging Technologies (Under Review)**: To be disclosed. [Journal Homepage](https://onlinelibrary.wiley.com/journal/hbet)
+- **IJCAI Human-Centred AI Track (Accepted)**: Altoe, F., Pinto, S.M.G., Pinto, H.S. (2025). "Explainable Automatic Fact-Checking for Journalists Augmentation in the Wild" [Conference Homepage](https://2025.ijcai.org/call-for-papers-human-centred-artificial-intelligence/)
 
 ## 🌟 Key Findings
 
@@ -33,7 +31,7 @@ Our research revealed several important insights about meme-based fact-checking 
 - Quantified LLM overconfidence in meme evaluation using GPT-4o, revealing a significant gap between its self-reported confidence and lower true confidence derived from token probabilities
 - Uncovered a potential systematic bias in LLM evaluation, observing that Gemini 1.5 Pro and Claude-3.5-Sonnet reported higher confidence when assessing memes debunking pro-Republican claims
 - Suggested that AI models exhibit stronger agreement with each other than humans do when evaluating memes
-- Concluded that evidence for LLMs acting as reliable proxies for human judgment in meme evaluation is inconclusive, with results indicating weak alignment with human ratings and a systematic tendency to rate memes more positively than human evaluators
+- Determined that evidence for LLMs acting as reliable proxies for human judgment in meme evaluation is inconclusive, with results indicating weak alignment with human ratings and a systematic tendency to rate memes more positively than human evaluators
 
 ### Social & Demographic Factors
 - Found evidence for echo chamber reinforcement mechanisms, where higher engagement intentions correlated with both increased confidence and increased belief in misinformation
@@ -245,13 +243,20 @@ This work builds upon several important resources:
 
 - **Internet Memes Knowledge Graph (IMKG)**: Our meme templates and contextual information were derived from IMKG, a comprehensive structured resource for internet meme research. [IMKG paper](https://2023.eswc-conferences.org/wp-content/uploads/2023/05/paper_Tommasini_2023_The.pdf)
 
-- **FactFlip**: We acknowledge Grégoire Burel's [FactFlip repository](https://github.com/evhart/factflip), which provided valuable code for processing IMKG data.
+- **FactFlip**: We acknowledge Grégoire Burel's [FactFlip repository](https://github.com/evhart/factflip), which provided code for parsing IMKG.
 
 - **CIMPLE Project**: This research was developed under the Countering Creative Information Manipulation with Explainable Artificial Intelligence (CIMPLE) project, approved under the 2019 CHIST-ERA call "Explainable Machine Learning-based Artificial Intelligence."
 
 ## 📜 License <a name="license"></a>
 
-This project is part of academic research. License information will be added soon.
+This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)**.
+
+[![CC BY-NC 4.0][cc-by-nc-shield]][cc-by-nc]
+
+For the full license text, see the [LICENSE](LICENSE) file in this repository.
+
+[cc-by-nc]: http://creativecommons.org/licenses/by-nc/4.0/
+[cc-by-nc-shield]: https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg
 
 ---
 
