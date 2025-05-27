@@ -5,7 +5,7 @@
 
 <div align="center">
     <p><strong>Grade of Thesis Proposal:</strong> 19/20</p>
-    <p><strong>Grade of Final Dissertation:</strong> To be determined</p>
+    <p><strong>Grade of Final Dissertation:</strong> 19/20</p>
     <p><em>The full dissertation and extended abstract will be linked here once published by Instituto Superior Técnico, Universidade de Lisboa</em></p>
 </div>
 
